@@ -32,7 +32,7 @@ def plot_obs(input_files):
         col = i % 4
         row = int(i / 4)
         axs[col].hist(obs[:, i], bins=20)
-        axs.flat[i].set(xlabel=xlabels[i], ylabel='Number of Events')
+        axs.flat[i].set(xlabel=xlabels[i], ylabel='Number of hits')
     fig.suptitle("Observational Data")
     plt.show()
     return 0
