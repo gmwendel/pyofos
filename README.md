@@ -27,5 +27,8 @@ flat_hits=data.get_obs_data()
 images=data.get_all_images(side_number=10)
 ```
 
-
-
+## Testing
+includes a unit test which plots the distribution of truth data, hit data, and the first image of the file
+```commandline
+python3 pyofos/unittest.py /path/to/file.root
+```
