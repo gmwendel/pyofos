@@ -16,7 +16,7 @@ pip install -e .
 ```
 from pyofos.roottools import DataExtractor
 
-data=DataExtractor("path/to/file.root")
+data=DataExtractor(["path/to/file.root", "path/to/another/file.root", ...])
 #to get truth data
 mc_truth=data.get_truth_data()
 
