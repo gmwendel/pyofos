@@ -23,8 +23,8 @@ mc_truth=data.get_truth_data()
 #to get flattened hit data
 flat_hits=data.get_obs_data()
 
-#to get images
-images=data.get_all_images()
+#to get images of a 10x10 grid
+images=data.get_all_images(side_number=10)
 ```
 
 
