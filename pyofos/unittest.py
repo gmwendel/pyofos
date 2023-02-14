@@ -6,7 +6,7 @@ import argparse
 
 def plot_truth(input_files):
     data = DataExtractor(input_files)
-    hyp = data.get_hyp_data()
+    hyp = data.get_truth_data()
 
     xlabels = ['x (mm)', 'y (mm)', 'z (mm)', 'cos(zenith)', 'azimuth (rad)', 't (ns)', 'E (MeV)']
     fig, axs = plt.subplots(2, 4)

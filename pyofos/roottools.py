@@ -61,7 +61,7 @@ class DataExtractor():
 
         return hit_obs
 
-    def get_hyp_data(self):
+    def get_truth_data(self):
         truthdata = uproot.concatenate([infile + ":mc_truth;1" for infile in self.input_files],
                                        filter_name=["i_pos_x", "i_pos_y", "i_pos_z", "i_mom_x", "i_mom_y", "i_mom_z",
                                                     "i_time", "i_E"], library='np')
