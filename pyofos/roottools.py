@@ -15,18 +15,28 @@ class DataExtractor():
         # Validate all files are valid, do not load invalid files
         valid_files = []
         valid_out_keys = []
+        valid_mc_keys = []
         for infile in input_files:
             if self.file_isvalid(infile):
                 valid_files.append(infile)
                 valid_out_keys.append(self.get_valid_out_key(infile))  # This is a temporary hack
+                valid_mc_keys.append(self.get_valid_mc_key(infile))
 
         self.out_keys = valid_out_keys
+        self.mc_keys = valid_mc_keys
         self.input_files = valid_files
 
     # Need to define a better way to get the valid outkey if there are several output trees in file
     def get_valid_out_key(self, infile):
         with uproot.open(infile) as file:
             all_out_keys = [out_key for out_key in file.keys() if out_key.startswith('op_hits')]  # filter metas
+            all_out_num = np.array([int(out_key[-1]) for out_key in all_out_keys])
+            index = np.argmax(all_out_num)
+            return all_out_keys[index]
+
+    def get_valid_mc_key(self, infile):
+        with uproot.open(infile) as file:
+            all_out_keys = [out_key for out_key in file.keys() if out_key.startswith('mc_truth')]  # filter metas
             all_out_num = np.array([int(out_key[-1]) for out_key in all_out_keys])
             index = np.argmax(all_out_num)
             return all_out_keys[index]
@@ -62,7 +72,7 @@ class DataExtractor():
         return hit_obs
 
     def get_truth_data(self):
-        truthdata = uproot.concatenate([infile + ":mc_truth;1" for infile in self.input_files],
+        truthdata = uproot.concatenate([self.input_files[i] + ":" + self.mc_keys[i] for i in range(len(self.input_files))],
                                        filter_name=["i_pos_x", "i_pos_y", "i_pos_z", "i_mom_x", "i_mom_y", "i_mom_z",
                                                     "i_time", "i_E"], library='np')
         momentum = np.stack([
