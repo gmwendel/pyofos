@@ -18,7 +18,10 @@ def get_dist(pkgname):
 
 
 install_requires = [
-    "pip>=1.8"
+    "pip>=1.8",
+    "numpy>=1.19.2",
+    "uproot",
+    'matplotlib>=3.0'
 ]
 
 # If tensorflow-gpu is installed, use that
