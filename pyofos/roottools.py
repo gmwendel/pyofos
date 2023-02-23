@@ -113,7 +113,7 @@ class DataExtractor():
             side_number = int(len(np.unique(np.concatenate(obsdata['h_primary_id']))) ** 0.5)
             print("Calculated number of fibers on a side is: " + str(side_number))
 
-        imgs = np.array([self.get_one_image(side_number, obs) for obs in obsdata['h_primary_id']])
+        imgs = np.array([self.get_one_image(side_number, obs) for obs in obsdata['h_primary_id']]).astype(np.uint16)
         return imgs
 
     def get_one_image(self, side_number, evtdata):
@@ -122,4 +122,4 @@ class DataExtractor():
         img[index] = number
 #        img = np.flip(img) #for some reason index starts at bottom right corner
         img.shape = (side_number, side_number)
-        return img
+        return img.astype(np.uint16)
