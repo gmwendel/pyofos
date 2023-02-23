@@ -105,7 +105,7 @@ class DataExtractor():
     def get_all_images(self, side_number=None):
         obsdata = uproot.concatenate(
             [self.input_files[i] + ":" + self.out_keys[i] for i in range(len(self.input_files))],
-            filter_name=['h_primary_id', "h_pos_y", "h_pos_z"], library='np')
+            filter_name=['h_primary_id'], library='np')
 
         if side_number is None:
             print(
