@@ -46,10 +46,14 @@ class DataExtractor():
 
     def get_valid_init_mc_key(self, infile):
         with uproot.open(infile) as file:
-            all_out_keys = [out_key for out_key in file.keys() if out_key.startswith('init_mc_truth')]  # filter metas
-            all_out_num = np.array([int(out_key[-1]) for out_key in all_out_keys])
-            index = np.argmax(all_out_num)
-            return all_out_keys[index]
+            try:
+                all_out_keys = [out_key for out_key in file.keys() if out_key.startswith('init_mc')]  # filter metas
+                all_out_num = np.array([int(out_key[-1]) for out_key in all_out_keys])
+                index = np.argmax(all_out_num)
+                return all_out_keys[index]
+            except:
+                print('no init_mc tree found')
+                return None
 
     def file_isvalid(self, infile):
         try:
@@ -169,7 +173,7 @@ class DataExtractor():
         ]
             , axis=1)
 
-        hit_obs[:, 1] = hit_obs[:, 1] + np.random.exponential(10, len(hit_obs[:, 1])) #Add random time decay
+        hit_obs[:, 1] = hit_obs[:, 1] + np.random.exponential(10, len(hit_obs[:, 1]))  # Add random time decay
 
         del obsdata
 
