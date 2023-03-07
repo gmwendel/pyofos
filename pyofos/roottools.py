@@ -181,3 +181,38 @@ class DataExtractor():
         hit_hyp = np.repeat(charge_hyp, nhit, axis=0)
 
         return charge_obs, hit_obs, charge_hyp, hit_hyp
+
+    def get_hitman_reco_data(self):
+        obsdata = uproot.concatenate(
+            [self.input_files[i] + ":" + self.out_keys[i] for i in range(len(self.input_files))],
+            filter_name=['h_primary_id', 'h_time'], library='np')
+
+        charge_hyp = self.get_init_truth_data()
+
+        nhit = np.array([len(hits) for hits in obsdata['h_primary_id']], dtype=np.int32)
+        charge_obs = np.stack([
+            nhit.astype(np.float32)
+        ], axis=1)
+
+        events = []
+
+        for i in range(len(nhit)):
+            hit_idx = obsdata['h_primary_id'][i].astype(np.float32)
+            hit_t = obsdata['h_time'][i].astype(np.float32)
+            hit_t = hit_t + np.random.exponential(10, len(hit_t))  # Add random time decay
+
+            hits = np.stack([
+                hit_idx,
+                hit_t.astype(np.float32)
+            ]
+                , axis=1)
+
+            event = {
+                "hits": hits,
+                "total_charge": charge_obs[i],
+                "truth": charge_hyp[i]
+            }
+
+        del obsdata
+
+        return events
