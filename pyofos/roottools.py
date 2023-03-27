@@ -135,7 +135,7 @@ class DataExtractor():
                         ], axis=1)
         return hyp
 
-    def get_all_images(self, side_number=None):
+    def get_all_images(self, side_number=None, stop_num=None, start_num=0):
         obsdata = uproot.concatenate(
             [self.input_files[i] + ":" + self.out_keys[i] for i in range(len(self.input_files))],
             filter_name=['h_primary_id'], library='np')
@@ -145,6 +145,12 @@ class DataExtractor():
                 "Warning: Number of fibers on a size not specified for image data, will try calculating based on input data")
             side_number = int(len(np.unique(np.concatenate(obsdata['h_primary_id']))) ** 0.5)
             print("Calculated number of fibers on a side is: " + str(side_number))
+
+        imgs = []
+        if stop_num is None:
+            stop_num = len(obsdata['h_primary_id'])
+        for i in range(start_num, stop_num):
+            imgs.append(self.get_one_image(side_number, obsdata['h_primary_id'][i]))
 
         imgs = np.array([self.get_one_image(side_number, obs) for obs in obsdata['h_primary_id']]).astype(np.uint16)
         return imgs
