@@ -125,6 +125,10 @@ class DataExtractor():
             [self.input_files[i] + ":" + self.init_mc_keys[i] for i in range(len(self.input_files))],
             filter_name=["mcx", "mcy", "mcz", "mct", "mcu", "mcv", "mcw", "mcke", "mcpid"], library='np')
 
+        if stop_num > len(hypdata['mcx']):
+            raise ValueError('stop_num should be equal to or smaller than the total number of events: ',
+                             len(hypdata['mcx']))
+
         mcaz = np.mod(np.arctan2(hypdata['mcv'], hypdata['mcu']), 2 * np.pi).astype(np.float32)[start_num:stop_num]
         mcze = np.arccos(hypdata['mcw']).astype(np.float32)[start_num:stop_num]
         hyp = np.stack([hypdata['mcx'].astype(np.float32)[start_num:stop_num],
@@ -146,7 +150,8 @@ class DataExtractor():
             [self.input_files[i] + ":" + self.out_keys[i] for i in range(len(self.input_files))],
             filter_name=['h_primary_id'], library='np')
         if stop_num > len(obsdata['h_primary_id']):
-            raise ValueError('stop_num should be equal to or smaller than the number of events')
+            raise ValueError('stop_num should be equal to or smaller than the total number of events: ',
+                             len(obsdata['h_primary_id']))
 
         if side_number is None:
             print(
