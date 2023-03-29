@@ -117,28 +117,36 @@ class DataExtractor():
 
         return hyp
 
-    def get_init_truth_data(self):
+    def get_init_truth_data(self, stop_num=None, start_num=0):
+        if stop_num < start_num:
+            raise ValueError('stop_num should be equal to or larger than start_num')
+
         hypdata = uproot.concatenate(
             [self.input_files[i] + ":" + self.init_mc_keys[i] for i in range(len(self.input_files))],
             filter_name=["mcx", "mcy", "mcz", "mct", "mcu", "mcv", "mcw", "mcke", "mcpid"], library='np')
 
-        mcaz = np.mod(np.arctan2(hypdata['mcv'], hypdata['mcu']), 2 * np.pi).astype(np.float32)
-        mcze = np.arccos(hypdata['mcw']).astype(np.float32)
-        hyp = np.stack([hypdata['mcx'].astype(np.float32),
-                        hypdata['mcy'].astype(np.float32),
-                        hypdata['mcz'].astype(np.float32),
+        mcaz = np.mod(np.arctan2(hypdata['mcv'], hypdata['mcu']), 2 * np.pi).astype(np.float32)[start_num:stop_num]
+        mcze = np.arccos(hypdata['mcw']).astype(np.float32)[start_num:stop_num]
+        hyp = np.stack([hypdata['mcx'].astype(np.float32)[start_num:stop_num],
+                        hypdata['mcy'].astype(np.float32)[start_num:stop_num],
+                        hypdata['mcz'].astype(np.float32)[start_num:stop_num],
                         mcze,
                         mcaz,
-                        hypdata['mct'].astype(np.float32),
-                        hypdata['mcke'].astype(np.float32),
-                        hypdata['mcpid'].astype(np.float32)
+                        hypdata['mct'].astype(np.float32)[start_num:stop_num],
+                        hypdata['mcke'].astype(np.float32)[start_num:stop_num],
+                        hypdata['mcpid'].astype(np.float32)[start_num:stop_num]
                         ], axis=1)
         return hyp
 
     def get_all_images(self, side_number=None, stop_num=None, start_num=0):
+        if stop_num < start_num:
+            raise ValueError('stop_num should be equal to or larger than start_num')
+
         obsdata = uproot.concatenate(
             [self.input_files[i] + ":" + self.out_keys[i] for i in range(len(self.input_files))],
             filter_name=['h_primary_id'], library='np')
+        if stop_num > len(obsdata['h_primary_id']):
+            raise ValueError('stop_num should be equal to or smaller than the number of events')
 
         if side_number is None:
             print(
