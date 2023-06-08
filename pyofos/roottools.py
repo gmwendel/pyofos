@@ -165,7 +165,7 @@ class DataExtractor():
         for i in range(start_num, stop_num):
             imgs.append(self.get_one_image(side_number, obsdata['h_primary_id'][i]))
 
-        imgs = np.array([self.get_one_image(side_number, obs) for obs in obsdata['h_primary_id']]).astype(np.uint16)
+        imgs = np.array(imgs).astype(np.uint16)
         return imgs
 
     def get_one_image(self, side_number, evtdata):
