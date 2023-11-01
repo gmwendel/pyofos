@@ -120,12 +120,15 @@ class DataExtractor():
         return self.get_init_truth_data(stop_num, start_num)
         
     def get_init_truth_data(self, stop_num=None, start_num=0):
-        if stop_num < start_num:
-            raise ValueError('stop_num should be equal to or larger than start_num')
-
         hypdata = uproot.concatenate(
             [self.input_files[i] + ":" + self.init_mc_keys[i] for i in range(len(self.input_files))],
             filter_name=["mcx", "mcy", "mcz", "mct", "mcu", "mcv", "mcw", "mcke", "mcpid"], library='np')
+        if stop_num is None:
+            stop_num = len(hypdata['mcx'])
+        if stop_num < start_num:
+            raise ValueError('stop_num should be equal to or larger than start_num')
+
+
 
         if stop_num > len(hypdata['mcx']):
             raise ValueError('stop_num should be equal to or smaller than the total number of events: ',
