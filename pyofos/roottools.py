@@ -117,7 +117,7 @@ class DataExtractor():
 
         return hyp
     def get_truth_data(self, stop_num=None, start_num=0):
-        return self.get_init_truth_data(self, stop_num, start_num)
+        return self.get_init_truth_data(stop_num, start_num)
         
     def get_init_truth_data(self, stop_num=None, start_num=0):
         if stop_num < start_num:
