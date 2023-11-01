@@ -143,9 +143,10 @@ class DataExtractor():
         return hyp
 
     def get_all_images(self, side_number=None, stop_num=None, start_num=0):
-        if stop_num is not None:
-            if stop_num < start_num:
-                raise ValueError('stop_num should be equal to or larger than start_num')
+        if stop_num is None:
+            stop_num = len(obsdata['h_primary_id'])
+        if stop_num < start_num:
+            raise ValueError('stop_num should be equal to or larger than start_num')
 
         obsdata = uproot.concatenate(
             [self.input_files[i] + ":" + self.out_keys[i] for i in range(len(self.input_files))],
@@ -161,8 +162,7 @@ class DataExtractor():
             print("Calculated number of fibers on a side is: " + str(side_number))
 
         imgs = []
-        if stop_num is None:
-            stop_num = len(obsdata['h_primary_id'])
+
         for i in range(start_num, stop_num):
             imgs.append(self.get_one_image(side_number, obsdata['h_primary_id'][i]))
 
