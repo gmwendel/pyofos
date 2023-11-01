@@ -143,7 +143,7 @@ class DataExtractor():
         return hyp
 
     def get_all_images(self, side_number=None, stop_num=None, start_num=0):
-        if stop_num is None or start_num is None:
+        if stop_num is not None or start_num is not None:
             if stop_num < start_num:
                 raise ValueError('stop_num should be equal to or larger than start_num')
 
