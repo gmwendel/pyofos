@@ -85,7 +85,7 @@ class DataExtractor():
 
         return hit_obs
 
-    def get_truth_data(self):
+    def get_truth_data_deprecated(self):
         truthdata = uproot.concatenate(
             [self.input_files[i] + ":" + self.mc_keys[i] for i in range(len(self.input_files))],
             filter_name=["i_pos_x", "i_pos_y", "i_pos_z", "i_mom_x", "i_mom_y", "i_mom_z",
@@ -116,7 +116,9 @@ class DataExtractor():
         ], axis=1)
 
         return hyp
-
+    def get_truth_data(self, stop_num=None, start_num=0):
+        return self.get_init_truth_data(self, stop_num=None, start_num=0)
+        
     def get_init_truth_data(self, stop_num=None, start_num=0):
         if stop_num < start_num:
             raise ValueError('stop_num should be equal to or larger than start_num')
