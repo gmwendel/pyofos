@@ -143,14 +143,16 @@ class DataExtractor():
         return hyp
 
     def get_all_images(self, side_number=None, stop_num=None, start_num=0):
-        if stop_num is None:
-            stop_num = len(obsdata['h_primary_id'])
-        if stop_num < start_num:
-            raise ValueError('stop_num should be equal to or larger than start_num')
 
         obsdata = uproot.concatenate(
             [self.input_files[i] + ":" + self.out_keys[i] for i in range(len(self.input_files))],
             filter_name=['h_primary_id'], library='np')
+        
+        #perform sanity checks
+        if stop_num is None:
+            stop_num = len(obsdata['h_primary_id'])
+        if stop_num < start_num:
+            raise ValueError('stop_num should be equal to or larger than start_num')
         if stop_num > len(obsdata['h_primary_id']):
             raise ValueError('stop_num should be equal to or smaller than the total number of events: ',
                              len(obsdata['h_primary_id']))
