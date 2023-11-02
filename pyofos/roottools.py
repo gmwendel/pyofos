@@ -117,8 +117,12 @@ class DataExtractor():
 
         return hyp
     def get_truth_data(self, stop_num=None, start_num=0):
-        return self.get_init_truth_data(stop_num, start_num)
-        
+        try:
+            return self.get_init_truth_data(stop_num, start_num)
+        except:
+            print("WARNING: USING DEPRECATED MC TRUTH FORMAT, ENERGY AND DIRECTION INFORMATION MAY BE INCORRECT")
+            return self.get_truth_data_deprecated()
+            
     def get_init_truth_data(self, stop_num=None, start_num=0):
         hypdata = uproot.concatenate(
             [self.input_files[i] + ":" + self.init_mc_keys[i] for i in range(len(self.input_files))],
